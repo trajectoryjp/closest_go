@@ -7,10 +7,10 @@ import (
 )
 
 type vertex struct {
-	indices    [2]int
-	coordinate mgl64.Vec3
+	indices               [2]int
+	coordinate            mgl64.Vec3
 	barycentricCoordinate float64
-	isVisited  bool
+	isVisited             bool
 }
 
 func newVertex(convexes [2][]*mgl64.Vec3, direction mgl64.Vec3) *vertex {

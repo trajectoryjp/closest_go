@@ -2,9 +2,9 @@
 // You get the distance or the depth between them in passing.
 //
 // The fundamental structure is [Measure]. An [Measure] contains two convex hulls, so
-// you must set at the first. Then, you can measure the distance or the depth between
-// them by calling [MeasureDistance] or [MeasureNonnegativeDistance] with the closest points. 
-// You can reuse [Measure] any number of times. [Measure] stroes the result of the last
+// you must set them at the first. Then, you can measure the distance or the depth between
+// them by calling [Measure.MeasureDistance] or [Measure.MeasureNonnegativeDistance] with the closest points.
+// You can reuse [Measure] any number of times. [Measure] stores the last
 // direction from the first convex hull to the second convex hull, so it can calculate
 // the closest points of the convex hulls faster than the first time.
 package closest
@@ -20,7 +20,7 @@ import (
 type Measure struct {
 	// In
 	// ConvexHulls are measured the distance between them.
-	// The less degenerate the convex hull, the more accurate the result.
+	// The less degenerate the convex hull, the more precise the result.
 	ConvexHulls [2][]*mgl64.Vec3
 
 	// Out
@@ -33,7 +33,7 @@ type Measure struct {
 	Direction mgl64.Vec3
 	// Points are the closest points on each convex hulls.
 	Points [2]mgl64.Vec3
-	// Ons are set of the vertex indices which the closest points are on the face constructed.
+	// Ons are the sets of indices of the vertices that make up the simplex that contains the closest point.
 	Ons [2]map[int]struct{}
 
 	simplex []*vertex
@@ -61,7 +61,7 @@ func (measure *Measure) MeasureDistance() {
 	measure.epa()
 }
 
-// MeasureNonnegativeDistance measures distance between each ConvexHulls, and updates Direction, Points and Ons
+// MeasureNonnegativeDistance measures distance between each ConvexHulls, and updates Direction, Points and Ons.
 func (measure *Measure) MeasureNonnegativeDistance() {
 	for _, convex := range measure.ConvexHulls {
 		if len(convex) == 0 {
@@ -129,8 +129,7 @@ func (measure *Measure) epa() {
 			faces = append(faces, newFace)
 		}
 	default:
-		log.Print("Must not come here!")
-		return
+		log.Panic("Must not come here!")
 	}
 
 	sort.Slice(faces, func(i int, j int) bool {
