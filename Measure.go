@@ -33,7 +33,7 @@ type Measure struct {
 	Direction mgl64.Vec3
 	// Points are the closest points on each convex hulls.
 	Points [2]mgl64.Vec3
-	// Ons are set of the vertex indices which the closest points are on the face constructed.
+	// Ons are the sets of indices of the vertices that make up the simplex that contains the closest point.
 	Ons [2]map[int]struct{}
 
 	simplex []*vertex
@@ -61,7 +61,7 @@ func (measure *Measure) MeasureDistance() {
 	measure.epa()
 }
 
-// MeasureNonnegativeDistance measures distance between each ConvexHulls, and updates Direction, Points and Ons
+// MeasureNonnegativeDistance measures distance between each ConvexHulls, and updates Direction, Points and Ons.
 func (measure *Measure) MeasureNonnegativeDistance() {
 	for _, convex := range measure.ConvexHulls {
 		if len(convex) == 0 {
