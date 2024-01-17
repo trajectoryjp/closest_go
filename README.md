@@ -1,6 +1,6 @@
 # closest
 
-[![GoDoc](https://pkg.go.dev/badge/github.com/trajectoryjp/closest_go)][API]
+![GoDoc](https://pkg.go.dev/badge/github.com/trajectoryjp/closest_go)
 [![GoReportCard](https://goreportcard.com/badge/trajectoryjp/closest_go)](https://goreportcard.com/report/github.com/trajectoryjp/closest_go)
 
 Go module closest provides you calculating the closest points of two convex hulls.
@@ -20,7 +20,7 @@ will automatically fetch the necessary dependencies:
 import "github.com/trajectoryjp/closest_go"
 ```
 
-## Contribute
+## Contribution
 
 You are very welcome to:
 
