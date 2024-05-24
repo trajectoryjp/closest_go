@@ -10,6 +10,8 @@
 package closest
 
 import (
+	"math"
+
 	"github.com/go-gl/mathgl/mgl64"
 
 	"log"
@@ -80,6 +82,7 @@ func (measure *Measure) MeasureNonnegativeDistance() {
 
 func (measure *Measure) gjk() {
 	measure.simplex = measure.simplex[:0]
+	measure.Distance = math.Inf(1)
 
 	for len(measure.simplex) < 4 {
 		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
@@ -95,8 +98,12 @@ func (measure *Measure) gjk() {
 		}
 
 		measure.updateDirection()
+		lastDistance := measure.Distance
+		measure.updateTheOthers()
+		if measure.Distance >= lastDistance {
+			break
+		}
 	}
-	measure.updateTheOthers()
 }
 
 func (measure *Measure) epa() {
