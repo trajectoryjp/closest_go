@@ -99,11 +99,13 @@ func (measure *Measure) gjk() {
 
 		measure.updateDirection()
 		lastDistance := measure.Distance
-		measure.updateTheOthers()
+		measure.updateDistance()
 		if measure.Distance >= lastDistance {
 			break
 		}
 	}
+
+	measure.updateTheOthers()
 }
 
 func (measure *Measure) epa() {
@@ -477,6 +479,10 @@ func (measure *Measure) updateDirection() {
 	}
 }
 
+func (measure *Measure) updateDistance() {
+	measure.Distance = measure.Direction.Len()
+}
+
 func (measure *Measure) updateTheOthers() {
 	denominator := 0.0
 	for _, vertex := range measure.simplex {
@@ -500,8 +506,6 @@ func (measure *Measure) updateTheOthers() {
 			measure.Ons[i][vertex.indices[i]] = struct{}{}
 		}
 	}
-
-	measure.Distance = measure.Direction.Len()
 }
 
 func (measure *Measure) reconstruct(faces []*face) []*face {
