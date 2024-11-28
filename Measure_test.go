@@ -256,7 +256,9 @@ func TestMeasureDistance_DistanceNaN(t *testing.T) {
 		Direction: mgl64.Vec3{-0.09838696251414104, 0.19117353980163715, 0.08413127327169329},
 	}
 
+	start := time.Now()
 	measure.MeasureDistance()
+	t.Log("Time: ", time.Since(start))
 
 	if measure.Distance != correctDistance {
 		t.Error("The distance: ", measure.Distance, " is different from the correct distance: ", correctDistance)
