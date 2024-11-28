@@ -165,6 +165,7 @@ findOuterMinDistanceFace:
 	measure.simplex = newSimplex
 	measure.updateSimplex()
 	measure.updateDirection()
+	measure.updateDistance()
 	measure.updateTheOthers()
 
 	measure.Distance *= -1.0
