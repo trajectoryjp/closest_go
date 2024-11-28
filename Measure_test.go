@@ -191,10 +191,6 @@ func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 }
 
 func TestMeasureDistance(t *testing.T) {
-	if testing.Short() {
-		t.Skip("TODO: Make this test succeed.")
-	}
-
 	convexHull0 := []*mgl64.Vec3{
 		{0.0, 5.5, 0.0},
 		{2.3, 1.0, -2.0},
@@ -229,10 +225,6 @@ func TestMeasureDistance(t *testing.T) {
 }
 
 func TestMeasureDistance_Geodetic(t *testing.T) {
-	if testing.Short() {
-		t.Skip("TODO: Make this test succeed.")
-	}
-
 	convexHull0 := []*mgl64.Vec3{
 		{136.243592, 36.294155, 0},
 		{136.243591519521, 36.3058526069559, 0.132705141790211},
