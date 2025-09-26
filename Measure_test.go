@@ -132,11 +132,77 @@ func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 	)
 }
 
+func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
+	testMeasureNonnegativeDistance(
+		t,
+		53.29158003236736,
+		[]*mgl64.Vec3{
+			{
+				136.33086399999999,
+				36.325947999999997,
+				100,
+			},
+			{
+				136.33014399999999,
+				36.325048000000002,
+				140,
+			},
+			{
+				136.33086399999999,
+				36.325947999999997,
+				140,
+			},
+		},
+		[]*mgl64.Vec3{
+			{
+				136.33020401000977,
+				36.325602178745555,
+				124,
+			},
+			{
+				136.330246925354,
+				36.325602178745555,
+				124,
+			},
+			{
+				136.330246925354,
+				36.325567603588468,
+				124,
+			},
+			{
+				136.33020401000977,
+				36.325567603588468,
+				124,
+			},
+			{
+				136.33020401000977,
+				36.325602178745555,
+				128,
+			},
+			{
+				136.330246925354,
+				36.325602178745555,
+				128,
+			},
+			{
+				136.330246925354,
+				36.325567603588468,
+				128,
+			},
+			{
+				136.33020401000977,
+				36.325567603588468,
+				128,
+			},
+		},
+	)
+}
+
 func testMeasureNonnegativeDistance(
 	t *testing.T,
 	correctDistance float64,
 	convexHull0, convexHull1 []*mgl64.Vec3,
-	) {
+) {
 	measure := Measure{
 		ConvexHulls: [2][]*mgl64.Vec3{
 			convexHull0,
@@ -269,7 +335,7 @@ func testMeasureDistance(
 	t *testing.T,
 	correctDistance float64,
 	convexHull0, convexHull1 []*mgl64.Vec3,
-	) {
+) {
 	measure := Measure{
 		ConvexHulls: [2][]*mgl64.Vec3{
 			convexHull0,
