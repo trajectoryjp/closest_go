@@ -135,7 +135,7 @@ func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 	testMeasureNonnegativeDistance(
 		t,
-		53.29158003236736,
+		0.0001794258015537176,
 		[]*mgl64.Vec3{
 			{
 				136.33086399999999,

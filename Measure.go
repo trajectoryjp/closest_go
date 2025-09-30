@@ -83,6 +83,7 @@ func (measure *Measure) MeasureNonnegativeDistance() {
 func (measure *Measure) gjk() {
 	measure.simplex = measure.simplex[:0]
 	measure.Distance = math.Inf(1)
+	var lastDistance float64
 
 	for len(measure.simplex) < 4 {
 		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
@@ -93,12 +94,12 @@ func (measure *Measure) gjk() {
 		}
 
 		if measure.updateSimplex() {
-			measure.updateDirection()
+			// measure.updateDirection()
 			break
 		}
 
 		measure.updateDirection()
-		lastDistance := measure.Distance
+		lastDistance = measure.Distance
 		measure.updateDistance()
 		if measure.Distance >= lastDistance {
 			break
@@ -322,6 +323,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		vAD := -a.Dot(ad)
 
 		n := ad.Cross(ab)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 := d.Cross(b)
 		n2 := b.Cross(a)
 		n3 := a.Cross(d)
@@ -331,6 +336,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		wADB := n3.Dot(n)
 
 		n = ac.Cross(ad)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 = c.Cross(d)
 		n2 = d.Cross(a)
 		n3 = a.Cross(c)
@@ -340,6 +349,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		wACD := n3.Dot(n)
 
 		n = bc.Mul(-1.0).Cross(cd)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 = b.Cross(d)
 		n2 = d.Cross(c)
 		n3 = c.Cross(b)
