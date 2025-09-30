@@ -83,7 +83,6 @@ func (measure *Measure) MeasureNonnegativeDistance() {
 func (measure *Measure) gjk() {
 	measure.simplex = measure.simplex[:0]
 	measure.Distance = math.Inf(1)
-	var lastDistance float64
 
 	for len(measure.simplex) < 4 {
 		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
@@ -94,12 +93,12 @@ func (measure *Measure) gjk() {
 		}
 
 		if measure.updateSimplex() {
-			// measure.updateDirection()
+			measure.updateDirection()
 			break
 		}
 
 		measure.updateDirection()
-		lastDistance = measure.Distance
+		lastDistance := measure.Distance
 		measure.updateDistance()
 		if measure.Distance >= lastDistance {
 			break
