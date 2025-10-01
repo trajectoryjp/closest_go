@@ -13,6 +13,7 @@ import (
 	"math"
 
 	"github.com/go-gl/mathgl/mgl64"
+	"github.com/xieyuschen/deepcopy"
 
 	"log"
 	"sort"
@@ -83,26 +84,35 @@ func (measure *Measure) MeasureNonnegativeDistance() {
 func (measure *Measure) gjk() {
 	measure.simplex = measure.simplex[:0]
 	measure.Distance = math.Inf(1)
+	var lastSymplex interface{}
+	var lastDirection mgl64.Vec3
+	lastDistance := measure.Distance
 
 	for len(measure.simplex) < 4 {
 		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
 
 		if measure.simplexHasCyclic(len(measure.simplex)-1, 0) {
-			measure.simplex = measure.simplex[:len(measure.simplex)-1]
+			measure.simplex = lastSymplex.([]*vertex)
 			break
 		}
 
 		if measure.updateSimplex() {
-			measure.updateDirection()
+			measure.simplex = lastSymplex.([]*vertex)
 			break
 		}
 
 		measure.updateDirection()
-		lastDistance := measure.Distance
 		measure.updateDistance()
 		if measure.Distance >= lastDistance {
+			measure.simplex = lastSymplex.([]*vertex)
+			measure.Direction = lastDirection
+			measure.Distance = lastDistance
 			break
 		}
+
+		lastSymplex, _ = deepcopy.Copy(measure.simplex)
+		lastDirection = measure.Direction
+		lastDistance = measure.Distance
 	}
 
 	measure.updateTheOthers()
