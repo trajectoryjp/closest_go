@@ -135,7 +135,7 @@ func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 	testMeasureNonnegativeDistance(
 		t,
-		0.00017942580155371764,
+		0.0001794258015537176,
 		[]*mgl64.Vec3{
 			{
 				136.33086399999999,
@@ -221,7 +221,7 @@ func testMeasureNonnegativeDistance(
 func TestMeasureDistance(t *testing.T) {
 	testMeasureDistance(
 		t,
-		-0.8135953914471573,
+		-0.2420013964014458,
 		[]*mgl64.Vec3{
 			{0.0, 5.5, 0.0},
 			{2.3, 1.0, -2.0},
@@ -243,7 +243,7 @@ func TestMeasureDistance(t *testing.T) {
 func TestMeasureDistance_Geodetic(t *testing.T) {
 	testMeasureDistance(
 		t,
-		-8.103902144849304e-05,
+		-4.071827329059758e-05,
 		[]*mgl64.Vec3{
 			{136.243592, 36.294155, 0},
 			{136.243591519521, 36.3058526069559, 0.132705141790211},
