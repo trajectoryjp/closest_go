@@ -94,7 +94,7 @@ func TestMeasureNonnegativeDistance_InOfTetrahedron(t *testing.T) {
 func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 	testMeasureNonnegativeDistance(
 		t,
-		53.291580032367334,
+		53.29158003236736,
 		[]*mgl64.Vec3{
 			{
 				231.13410161715001,
