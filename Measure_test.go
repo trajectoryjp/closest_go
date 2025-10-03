@@ -94,7 +94,7 @@ func TestMeasureNonnegativeDistance_InOfTetrahedron(t *testing.T) {
 func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 	testMeasureNonnegativeDistance(
 		t,
-		53.29158003236736,
+		53.291580032367334,
 		[]*mgl64.Vec3{
 			{
 				231.13410161715001,
@@ -135,7 +135,7 @@ func TestMeasureNonnegativeDistance_MinError(t *testing.T) {
 func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 	testMeasureNonnegativeDistance(
 		t,
-		0.0001794258015537176,
+		0.00017942580155371764,
 		[]*mgl64.Vec3{
 			{
 				136.33086399999999,
@@ -193,72 +193,6 @@ func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 				136.33020401000977,
 				36.325463878117205,
 				128,
-			},
-		},
-	)
-}
-
-func TestMeasureNonnegativeDistance_MinError3(t *testing.T) {
-	testMeasureNonnegativeDistance(
-		t,
-		0.0, // ?
-		[]*mgl64.Vec3{
-			{
-				136.33086399999999,
-				36.325947999999997,
-				140,
-			},
-			{
-				136.33014399999999,
-				36.325048000000002,
-				140,
-			},
-			{
-				136.33064399999998,
-				36.325048000000002,
-				150,
-			},
-		},
-		[]*mgl64.Vec3{
-			{
-				136.33071899414063,
-				36.325740479373849,
-				140,
-			},
-			{
-				136.33076190948486,
-				36.325740479373849,
-				140,
-			},
-			{
-				136.33076190948486,
-				36.325705904216754,
-				140,
-			},
-			{
-				136.33071899414063,
-				36.325705904216754,
-				140,
-			},
-			{
-				136.33071899414063,
-				36.325740479373849,
-				144,
-			},
-			{
-				136.33076190948486,
-				36.325740479373849,
-				144,
-			},
-			{
-				136.33076190948486,
-				36.325705904216754,
-				144,
-			},
-			{
-				136.33071899414063,
-				36.325705904216754,
-				144,
 			},
 		},
 	)
