@@ -13,6 +13,7 @@ import (
 	"math"
 
 	"github.com/go-gl/mathgl/mgl64"
+	"github.com/xieyuschen/deepcopy"
 
 	"log"
 	"sort"
@@ -82,30 +83,58 @@ func (measure *Measure) MeasureNonnegativeDistance() {
 
 func (measure *Measure) gjk() {
 	measure.simplex = measure.simplex[:0]
-	measure.Distance = math.Inf(1)
 
-	for len(measure.simplex) < 4 {
-		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
+	maxes := [2]mgl64.Vec3{}
+	for i := 0; i < len(measure.ConvexHulls); i += 1 {
+		for _, vertex := range measure.ConvexHulls[i] {
+			for j := 0; j < 3; j += 1 {
+				target := 2.0 * math.Abs(vertex[j])
 
-		if measure.simplexHasCyclic(len(measure.simplex)-1, 0) {
-			measure.simplex = measure.simplex[:len(measure.simplex)-1]
-			break
-		}
-
-		if measure.updateSimplex() {
-			measure.updateDirection()
-			break
-		}
-
-		measure.updateDirection()
-		lastDistance := measure.Distance
-		measure.updateDistance()
-		if measure.Distance >= lastDistance {
-			break
+				if target > maxes[i][j] {
+					maxes[i][j] = target
+				}
+			}
 		}
 	}
 
-	measure.updateTheOthers()
+	var lastSymplex interface{}
+	var lastDirection mgl64.Vec3
+	var lastPoints [2]mgl64.Vec3
+
+loop:
+	for len(measure.simplex) < 4 {
+		lastSymplex, _ = deepcopy.Copy(measure.simplex)
+		lastDirection = measure.Direction
+		lastPoints = measure.Points
+
+		measure.simplex = append(measure.simplex, newVertex(measure.ConvexHulls, measure.Direction))
+
+		if measure.simplexHasCyclic(len(measure.simplex)-1, 0) {
+			measure.simplex = lastSymplex.([]*vertex)
+			break loop
+		}
+
+		if measure.updateSimplex() {
+			measure.simplex = lastSymplex.([]*vertex)
+			break loop
+		}
+
+		measure.updateDirection()
+		measure.updatePoints()
+		for i := 0; i < len(measure.Points); i += 1 {
+			for j := 0; j < 3; j += 1 {
+				if !(math.Abs(measure.Points[i][j]) < maxes[i][j]) { // For the case where points[i][j] == NaN
+					measure.simplex = lastSymplex.([]*vertex)
+					measure.Direction = lastDirection
+					measure.Points = lastPoints
+					break loop
+				}
+			}
+		}
+	}
+
+	measure.updateOns()
+	measure.updateDistance()
 }
 
 func (measure *Measure) epa() {
@@ -165,8 +194,9 @@ findOuterMinDistanceFace:
 	measure.simplex = newSimplex
 	measure.updateSimplex()
 	measure.updateDirection()
+	measure.updatePoints()
+	measure.updateOns()
 	measure.updateDistance()
-	measure.updateTheOthers()
 
 	measure.Distance *= -1.0
 }
@@ -322,6 +352,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		vAD := -a.Dot(ad)
 
 		n := ad.Cross(ab)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 := d.Cross(b)
 		n2 := b.Cross(a)
 		n3 := a.Cross(d)
@@ -331,6 +365,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		wADB := n3.Dot(n)
 
 		n = ac.Cross(ad)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 = c.Cross(d)
 		n2 = d.Cross(a)
 		n3 = a.Cross(c)
@@ -340,6 +378,10 @@ func (measure *Measure) updateSimplex() (isDegenerated bool) {
 		wACD := n3.Dot(n)
 
 		n = bc.Mul(-1.0).Cross(cd)
+		if n[0] == 0.0 && n[1] == 0.0 && n[2] == 0.0 {
+			isDegenerated = true
+			return
+		}
 		n1 = b.Cross(d)
 		n2 = d.Cross(c)
 		n3 = c.Cross(b)
@@ -484,7 +526,7 @@ func (measure *Measure) updateDistance() {
 	measure.Distance = measure.Direction.Len()
 }
 
-func (measure *Measure) updateTheOthers() {
+func (measure *Measure) updatePoints() {
 	denominator := 0.0
 	for _, vertex := range measure.simplex {
 		denominator += vertex.barycentricCoordinate
@@ -497,7 +539,9 @@ func (measure *Measure) updateTheOthers() {
 			measure.Points[i] = measure.Points[i].Add(measure.ConvexHulls[i][vertex.indices[i]].Mul(denominator * vertex.barycentricCoordinate))
 		}
 	}
+}
 
+func (measure *Measure) updateOns() {
 	measure.Ons = [2]map[int]struct{}{
 		{},
 		{},
