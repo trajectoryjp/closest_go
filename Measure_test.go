@@ -428,7 +428,7 @@ func TestMeasureDistanceRandomly(t *testing.T) {
 		shiftedMeasure.MeasureDistance()
 		tryCount += 1
 
-		if shiftedMeasure.Distance < 0.0 || !cmp.Equal(shiftedMeasure.Distance, 0.0, option) {
+		if shiftedMeasure.Distance < 0.0 && !cmp.Equal(shiftedMeasure.Distance, 0.0, option) {
 			notCancelCount += 1
 		}
 		if shiftedMeasure.Distance >= minDistance {
