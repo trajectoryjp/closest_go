@@ -198,6 +198,23 @@ func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 	)
 }
 
+func TestMeasureNonnegativeDistance_2Dimension(t *testing.T) {
+	testMeasureNonnegativeDistance(
+		t,
+		3.4704251289367676,
+		[]*mgl64.Vec3{
+			{10, 15, 0},
+			{93.76614808098593, 15, 0},
+		},
+		[]*mgl64.Vec3{
+			{26.902334690093994, 7.686383247375488, 0},
+			{30.745525360107422, 7.686383247375488, 0},
+			{30.745525360107422, 11.529574871063232, 0},
+			{26.902334690093994, 11.529574871063232, 0},
+		},
+	)
+}
+
 func testMeasureNonnegativeDistance(
 	t *testing.T,
 	correctDistance float64,
