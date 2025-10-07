@@ -4,11 +4,18 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
+
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/xieyuschen/deepcopy"
 
 	"testing"
 )
+
+// option is required to compare floating-point values.
+// Removing this will cause tests on your machine or on GitHub Actions to fail.
+var option = cmpopts.EquateApprox(0, 1e-13)
 
 func TestMeasureNonnegativeDistance(t *testing.T) {
 	testMeasureNonnegativeDistance(
@@ -198,6 +205,23 @@ func TestMeasureNonnegativeDistance_MinError2(t *testing.T) {
 	)
 }
 
+func TestMeasureNonnegativeDistance_2Dimension(t *testing.T) {
+	testMeasureNonnegativeDistance(
+		t,
+		3.4704251289367676,
+		[]*mgl64.Vec3{
+			{10, 15, 0},
+			{93.76614808098593, 15, 0},
+		},
+		[]*mgl64.Vec3{
+			{26.902334690093994, 7.686383247375488, 0},
+			{30.745525360107422, 7.686383247375488, 0},
+			{30.745525360107422, 11.529574871063232, 0},
+			{26.902334690093994, 11.529574871063232, 0},
+		},
+	)
+}
+
 func testMeasureNonnegativeDistance(
 	t *testing.T,
 	correctDistance float64,
@@ -213,15 +237,17 @@ func testMeasureNonnegativeDistance(
 	start := time.Now()
 	measure.MeasureNonnegativeDistance()
 	t.Log("Time: ", time.Since(start))
-	if measure.Distance != correctDistance {
-		t.Error("The distance: ", measure.Distance, " is different from the correct distance: ", correctDistance)
+
+	difference := cmp.Diff(measure.Distance, correctDistance, option)
+	if difference != "" {
+		t.Error(difference)
 	}
 }
 
 func TestMeasureDistance(t *testing.T) {
 	testMeasureDistance(
 		t,
-		-0.2420013964014458,
+		-0.8135953914471573,
 		[]*mgl64.Vec3{
 			{0.0, 5.5, 0.0},
 			{2.3, 1.0, -2.0},
@@ -243,7 +269,7 @@ func TestMeasureDistance(t *testing.T) {
 func TestMeasureDistance_Geodetic(t *testing.T) {
 	testMeasureDistance(
 		t,
-		-4.071827329059758e-05,
+		-8.103902144849304e-05,
 		[]*mgl64.Vec3{
 			{136.243592, 36.294155, 0},
 			{136.243591519521, 36.3058526069559, 0.132705141790211},
@@ -268,10 +294,6 @@ func TestMeasureDistance_Geodetic(t *testing.T) {
 }
 
 func TestMeasureDistance_Geodetic2(t *testing.T) {
-	if testing.Short() {
-		t.Skip("TODO: Make this test succeed.")
-	}
-
 	testMeasureDistance(
 		t,
 		5.7316269682416994e-05,
@@ -326,8 +348,9 @@ func TestMeasureDistance_DistanceNaN(t *testing.T) {
 	measure.MeasureDistance()
 	t.Log("Time: ", time.Since(start))
 
-	if measure.Distance != correctDistance {
-		t.Error("The distance: ", measure.Distance, " is different from the correct distance: ", correctDistance)
+	difference := cmp.Diff(measure.Distance, correctDistance, option)
+	if difference != "" {
+		t.Error(difference)
 	}
 }
 
@@ -347,8 +370,9 @@ func testMeasureDistance(
 	measure.MeasureDistance()
 	t.Log("Time: ", time.Since(start))
 
-	if measure.Distance != correctDistance {
-		t.Error("The distance: ", measure.Distance, " is different from the correct distance: ", correctDistance)
+	difference := cmp.Diff(measure.Distance, correctDistance, option)
+	if difference != "" {
+		t.Error(difference)
 	}
 }
 
@@ -404,7 +428,7 @@ func TestMeasureDistanceRandomly(t *testing.T) {
 		shiftedMeasure.MeasureDistance()
 		tryCount += 1
 
-		if shiftedMeasure.Distance < 0.0 {
+		if shiftedMeasure.Distance < 0.0 && !cmp.Equal(shiftedMeasure.Distance, 0.0, option) {
 			notCancelCount += 1
 		}
 		if shiftedMeasure.Distance >= minDistance {

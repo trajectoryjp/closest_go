@@ -123,7 +123,7 @@ loop:
 		measure.updatePoints()
 		for i := 0; i < len(measure.Points); i += 1 {
 			for j := 0; j < 3; j += 1 {
-				if !(math.Abs(measure.Points[i][j]) < maxes[i][j]) { // For the case where points[i][j] == NaN
+				if !(math.Abs(measure.Points[i][j]) <= maxes[i][j]) { // For the case where points[i][j] == NaN
 					measure.simplex = lastSymplex.([]*vertex)
 					measure.Direction = lastDirection
 					measure.Points = lastPoints
